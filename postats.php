@@ -24,10 +24,20 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 */
 
-class Postats {
+require_once plugin_dir_path( __FILE__ ) . 'src/TextAnalyzer.php';
 
-	public static function init() {
-		$self = new self();
+class Postats {
+	/**
+	 * @var TextAnalyzer
+	 */
+	private $text_analyzer;
+
+	public function __construct( $text_analyzer ) {
+		$this->text_analyzer = $text_analyzer;
+	}
+
+	public static function init( $text_analizer ) {
+		$self = new self( $text_analizer );
 		add_action( 'plugins_loaded', array( $self, 'action_plugins_loaded' ) );
 		add_filter( 'the_content', array( $self, 'filter_the_content' ) );
 	}
@@ -48,17 +58,16 @@ class Postats {
 	 * @return string The content, with the statistics appended
 	 */
 	public function analyze_text( $text ) {
-		$text        = wp_strip_all_tags( $text );
-		$words_array = preg_split( "/[\n\r\t ]+/", $text, - 1, PREG_SPLIT_NO_EMPTY );
-
-
+		$this->text_analyzer->set_text( $text );
+		$words = $this->text_analyzer->count_words();
 
 		$output = sprintf( '<div class="postats">' . __( 'Post Stats: your posts has %s words', 'postats' ) . '</div>',
-			count( $words_array ) );
+			$words );
 
 
 		return $output;
 	}
 }
 
-Postats::init();
+$ta = new TextAnalyzer();
+Postats::init( $ta );

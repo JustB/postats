@@ -19,10 +19,14 @@ class TextAnalyzer {
 	 *
 	 * Averages WPM taken from https://en.wikipedia.org/wiki/Words_per_minute
 	 */
-	public function __construct( $text, $read_wpm = 184, $speak_wpm = 120 ) {
+	public function __construct( $text = '', $read_wpm = 184, $speak_wpm = 120 ) {
 		$this->text      = $text;
 		$this->read_wpm  = $read_wpm;
 		$this->speak_wpm = $speak_wpm;
+	}
+
+	public function set_text( $text ) {
+		$this->text = wp_strip_all_tags( $text );
 	}
 
 	public function count_words() {
