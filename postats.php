@@ -26,9 +26,10 @@ GNU General Public License for more details.
 
 class Postats {
 
-	public function __construct() {
-		add_action( 'plugins_loaded', array( $this, 'action_plugins_loaded' ) );
-		add_filter( 'the_content', array( $this, 'filter_the_content') );
+	public static function init() {
+		$self = new self();
+		add_action( 'plugins_loaded', array( $self, 'action_plugins_loaded' ) );
+		add_filter( 'the_content', array( $self, 'filter_the_content' ) );
 	}
 
 	public function action_plugins_loaded() {
@@ -47,8 +48,10 @@ class Postats {
 	 * @return string The content, with the statistics appended
 	 */
 	public function analyze_text( $text ) {
-		$text = wp_strip_all_tags( $text );
-		$words_array = preg_split( "/[\n\r\t ]+/", $text, -1, PREG_SPLIT_NO_EMPTY );
+		$text        = wp_strip_all_tags( $text );
+		$words_array = preg_split( "/[\n\r\t ]+/", $text, - 1, PREG_SPLIT_NO_EMPTY );
+
+
 
 		$output = sprintf( '<div class="postats">' . __( 'Post Stats: your posts has %s words', 'postats' ) . '</div>',
 			count( $words_array ) );
@@ -56,20 +59,6 @@ class Postats {
 
 		return $output;
 	}
-
-	/**
-	 * Singleton instantiator.
-	 *
-	 */
-	public static function get_instance() {
-		static $instance;
-
-		if ( ! isset( $instance ) ) {
-			$instance = new Postats();
-		}
-
-		return $instance;
-	}
 }
 
-$GLOBALS['postats'] = Postats::get_instance();
+Postats::init();
