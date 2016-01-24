@@ -58,12 +58,24 @@ class Postats {
 	 * @return string The content, with the statistics appended
 	 */
 	public function analyze_text( $text ) {
-		$this->text_analyzer->set_text( $text );
-		$words = $this->text_analyzer->count_words();
+		$output = '';
+		if ( is_single() && is_main_query() ) {
+			$this->text_analyzer->set_text( $text );
+			$words         = $this->text_analyzer->count_words();
+			$characters    = $this->text_analyzer->count_characters();
+			$reading_time  = $this->text_analyzer->reading_time();
+			$speaking_time = $this->text_analyzer->speaking_time();
+			$post_id       = get_the_ID();
 
-		$output = sprintf( '<div class="postats">' . __( 'Post Stats: your posts has %s words', 'postats' ) . '</div>',
-			$words );
+			$output = sprintf( '<h6 class="postats postats-%s">' . __( 'Post Stats', 'postats' ) . '</h6>', $post_id );
+			$output .= '<ul>';
+			$output .= '<li>' . sprintf( _n( '%d word', '%d words', $words, 'postats' ), $words ) . '</li>';
+			$output .= '<li>' . sprintf( _n( '%d character', '%d characters', $characters, 'postats' ), $characters ) . '</li>';
+			$output .= '<li>' . sprintf( __( '%d s reading time', 'postats' ), $reading_time ) . '</li>';
+			$output .= '<li>' . sprintf( __( '%d s speaking time', 'postats' ), $speaking_time ) . '</li>';
+			$output .= '</ul>';
 
+		}
 
 		return $output;
 	}
