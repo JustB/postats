@@ -1,0 +1,13 @@
+.postats-container {
+    font-size: .75em;
+}
+
+.postats-container ul {
+    display: table;
+    list-style: none;
+}
+
+.postats-container li {
+    display: table-cell;
+    padding-right: 10px;
+}

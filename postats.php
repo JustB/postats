@@ -40,6 +40,11 @@ class Postats {
 		$self = new self( $text_analizer );
 		add_action( 'plugins_loaded', array( $self, 'action_plugins_loaded' ) );
 		add_filter( 'the_content', array( $self, 'filter_the_content' ) );
+		add_action( 'wp_enqueue_scripts', array( $self, 'enqueue_scripts' ) );
+	}
+
+	public function enqueue_scripts() {
+		wp_enqueue_style( 'postats', plugin_dir_url( __FILE__ ) . 'css/main.css' );
 	}
 
 	public function action_plugins_loaded() {
@@ -67,13 +72,9 @@ class Postats {
 			$speaking_time = $this->text_analyzer->speaking_time();
 			$post_id       = get_the_ID();
 
-			$output = sprintf( '<h6 class="postats postats-%s">' . __( 'Post Stats', 'postats' ) . '</h6>', $post_id );
-			$output .= '<ul>';
-			$output .= '<li>' . sprintf( _n( '%d word', '%d words', $words, 'postats' ), $words ) . '</li>';
-			$output .= '<li>' . sprintf( _n( '%d character', '%d characters', $characters, 'postats' ), $characters ) . '</li>';
-			$output .= '<li>' . sprintf( __( '%d s reading time', 'postats' ), $reading_time ) . '</li>';
-			$output .= '<li>' . sprintf( __( '%d s speaking time', 'postats' ), $speaking_time ) . '</li>';
-			$output .= '</ul>';
+			ob_start();
+			include plugin_dir_path( __FILE__ ) . 'views/stats.php';
+			$output = ob_get_clean();
 
 		}
 
