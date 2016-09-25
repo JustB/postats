@@ -4,7 +4,7 @@
 Plugin Name: Postats
 Description: Print stats about your posts.
 Plugin URI: http://borzacchiello.it/postats
-Version: 0.1
+Version: 1.0.1
 Author: Giustino Borzacchiello
 Author URI: http://borzacchiello.it
 Text Domain: postats
